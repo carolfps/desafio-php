@@ -1,15 +1,12 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<?php require('./includes/head.php'); ?>
-
-<head>
-    <title>Adicionar Produto</title>
-</head>
-
 <?php
-
+session_start();
+//se não tiver logado redireciona para a pagina de login
+if(!isset($_SESSION["email"])){
+    header("Location: login.php");
+}
 
 if ($_POST) {
+    //se o texto de descricao do produto estiver vazio
     if (!isset($_POST["descricao-produto"])) {
         $_POST["descricao-produto"] = "";
     }
@@ -23,7 +20,7 @@ if ($_POST) {
 
         $dadosatuais = file_get_contents("cadastprodutos.json");
         $temporario = json_decode($dadosatuais, true);
-
+        //se esse for o primeiro produto cadastrado no json o id dele será 1, se não será o último id+1
         if (!isset($temporario[0]["id"])) {
             $produto["id"] = 1;
         } else {
@@ -33,41 +30,24 @@ if ($_POST) {
         }
 
         if ($_FILES) {
-            $ext = pathinfo($_FILES["fotoProd"]["name"], PATHINFO_EXTENSION);
+            $ext = strtolower(pathinfo($_FILES["fotoProd"]["name"], PATHINFO_EXTENSION));
             $nome = "Produto".$produto["id"].".".$ext;
             $arquivo = $_FILES["fotoProd"]["tmp_name"];
             $caminho = "uploads\\" . $nome;
             $produto["Enderecofoto"] = $caminho;
             $uploadOk = 1;
-            $imageFileType = strtolower(pathinfo($caminho, PATHINFO_EXTENSION));
-            //checa se o arquivo ja existe
-            if (file_exists($caminho)) {
-                $uploadOk = 0;
-            }
             //permitindo apenas determinadas extensões de arquivo
-            if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif") {
+            if ($ext != "jpg" && $ext != "png" && $ext != "jpeg" && $ext != "gif") {
                 $uploadOk = 0;
             }
             //checa se $uploadOk é zero, ou seja, se teve algum erro
             if ($uploadOk == 0) {
-                echo "Desculpa, não foi possível subir o seu arquivo.";
-                
-                //se tudo estiver OK tenta subir o arquivo
+                echo "Desculpa, não foi possível subir o seu arquivo.";                
             } else {
+                //se tudo estiver OK tenta subir o arquivo
                 $movendo = move_uploaded_file($arquivo, $caminho);
             }
         }
-
-        $existenabase = 0;
-
-        // if (sizeof($temporario)>1) {
-        //     foreach ($dadosatuais as $prodcadastrado) {
-        //         if ($prodcadastrado["nome"] == $produto["nome"]) {
-        //             $existenabase = 1;
-        //             echo "Este produto já está cadastrado!";
-        //         }
-        //     }
-        // }
 
         if (file_exists('cadastprodutos.json') ) {
             $dadosatuais = file_get_contents("cadastprodutos.json");
@@ -75,20 +55,23 @@ if ($_POST) {
             $temporario[] = $produto;
             $jsonData = json_encode($temporario);
             file_put_contents("cadastprodutos.json", $jsonData);
-            header("Location: /desafio-php/indexprodutos.php");
+            header("Location: indexprodutos.php");
         }
     }
 
 }
 ?>
 
+<!DOCTYPE html>
+<html lang="pt-br">
+<?php require('./includes/head.php'); ?>
+
+<head>
+    <title>Adicionar Produto</title>
+</head>
+
 <body>
-    <?php require('./includes/navbar.php'); 
-    //se não tiver logado redireciona para a pagina de login
-    if(!isset($_SESSION["email"])){
-        header("Location: /desafio-php/login.php");
-    }
-    ?>
+    <?php require('./includes/navbar.php');?>
     <div class="container">
         <h3 class="mt-4 font-weight-bold">Adicionar Produto</h3>
         <form action="" method="post" enctype="multipart/form-data">
@@ -120,11 +103,6 @@ if ($_POST) {
             </div>
             <input class="btn btn-primary btn-block" type="submit" value="Adicionar" name="submit">
         </form>
-
-
     </div>
-
-
 </body>
-
 </html>

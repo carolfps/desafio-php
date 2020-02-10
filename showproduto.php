@@ -1,15 +1,17 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<?php require('./includes/head.php'); ?>
-<head>
-    <title>Excluir Produto</title>
-</head>
 <?php
+    session_start();
+    //se não tiver logado redireciona para a pagina de login
+    if(!isset($_SESSION["email"])){
+        header("Location: login.php");
+    }
+
     if($_GET["id"] and file_exists('cadastprodutos.json')){
         $produtoscadast = file_get_contents("cadastprodutos.json");
         $produtoscadast = json_decode($produtoscadast, true);
         $posicao = array_search($_GET["id"], array_column($produtoscadast, 'id'));        
     }
+    
+    //se a pessoa clicar em excluir, os dados do produto serão apagados e a foto do produto também
     if(isset($_POST["excluir"])){
         $produtoscadast = file_get_contents("cadastprodutos.json");
         $produtoscadast = json_decode($produtoscadast, true);
@@ -23,17 +25,19 @@
         $produtosord=array_values($produtoscadast);
         $jsonData = json_encode($produtosord);
         file_put_contents("cadastprodutos.json", $jsonData);
-        header('Location: /desafio-php/indexprodutos.php');
+        header('Location: indexprodutos.php');
         exit;
     }
 ?>
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<?php require('./includes/head.php'); ?>
+<head>
+    <title>Excluir Produto</title>
+</head>
 <body>
-    <?php require('./includes/navbar.php'); 
-    //se não tiver logado redireciona para a pagina de login
-    if(!isset($_SESSION["email"])){
-        header("Location: /desafio-php/login.php");
-    }
-    ?>
+    <?php require('./includes/navbar.php'); ?>
     <div class="container">
     <h3 class="mt-4 font-weight-bold">Excluir Produto</h3>
         <div class="card" style="width: 100%;">

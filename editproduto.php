@@ -1,5 +1,10 @@
 <?php
-
+session_start();
+//se não tiver logado redireciona para a pagina de login
+if(!isset($_SESSION["email"])){
+    header("Location: login.php");
+}
+//verifica se o id foi passado por get e existe o json com os dados dos produtos
 if ($_GET["id"] and file_exists('cadastprodutos.json')) {
     $produtoscadast = file_get_contents("cadastprodutos.json");
     $produtoscadast = json_decode($produtoscadast, true);
@@ -7,6 +12,7 @@ if ($_GET["id"] and file_exists('cadastprodutos.json')) {
 }
 
 if ($_POST) {
+    //se nada tiver sido colocado na descricao do produto, coloca um array vazio
     if (!isset($_POST["descricao-produto"])) {
         $_POST["descricao-produto"] = "";
     }
@@ -21,7 +27,6 @@ if ($_POST) {
 
         $dadosatuais = file_get_contents("cadastprodutos.json");
         $temporario = json_decode($dadosatuais, true);
-
         
         if (isset($_FILES)) {
             $ext = pathinfo($_FILES["fotoProd"]["name"], PATHINFO_EXTENSION);
@@ -53,7 +58,7 @@ if ($_POST) {
             $temporario[$posicao] = $produtoEdit;
             $jsonData = json_encode($temporario);
             file_put_contents("cadastprodutos.json", $jsonData);
-            header('Location: /desafio-php/indexprodutos.php');
+            header('Location: indexprodutos.php');
             exit;
         }
     }
@@ -69,12 +74,7 @@ if ($_POST) {
 </head>
 
 <body>
-    <?php require('./includes/navbar.php'); 
-    //se não tiver logado redireciona para a pagina de login
-    if(!isset($_SESSION["email"])){
-        header("Location: /desafio-php/login.php");
-    }
-    ?>
+    <?php require('./includes/navbar.php'); ?>
     <div class="container">
         <h3 class="mt-4 font-weight-bold">Editar Produto</h3>
         <form method="post" enctype="multipart/form-data" class="">
@@ -96,7 +96,7 @@ if ($_POST) {
                     </div>
                 </div>
                 <div class="form-group">
-                    <img src="<?php if($produtoscadast[$posicao]["Enderecofoto"]){echo $produtoscadast[$posicao]["Enderecofoto"];} ?>" class="img-fluid" style="object-fit: cover; object-position: bottom;width: 100%; max-height: 300px; border-radius: 3px;" alt="produto">
+                    <img src="<?php if($produtoscadast[$posicao]["Enderecofoto"]){echo $produtoscadast[$posicao]["Enderecofoto"];} ?>" class="img-fluid" style="object-fit: cover; object-position: middle;width: 100%; max-height: 300px; border-radius: 3px;" alt="produto">
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-12">
@@ -109,11 +109,6 @@ if ($_POST) {
             </div>
             <button class="btn btn-warning btn-block mb-3" type="submit">Editar</button>
         </form>
-
-
     </div>
-
-
 </body>
-
 </html>

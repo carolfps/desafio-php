@@ -1,3 +1,11 @@
+<?php
+session_start();
+//se não tiver logado redireciona para a pagina de login
+if(!$_SESSION["email"]){
+    header("Location: login.php");
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <?php require('./includes/head.php'); ?>
@@ -7,14 +15,7 @@
 </head>
 
 <body>
-    <?php require('./includes/navbar.php');?>
-    <?php 
-    //se não tiver logado redireciona para a pagina de login
-    if(!isset($_SESSION["email"])){
-        header("Location: /desafio-php/login.php");
-    }
-    ?>
-    
+    <?php require('./includes/navbar.php');?>    
     <div class="container">
         <h3 class="mt-4 font-weight-bold">Lista de Produtos</b></h3>
         <table class="table table-bordered">

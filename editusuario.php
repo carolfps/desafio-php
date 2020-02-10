@@ -34,7 +34,7 @@ if (isset($_POST["editar"])) {
             $temporario[$posicao] = $usuarioedit;
             $jsonData = json_encode($temporario);
             file_put_contents("usuarios.json", $jsonData);
-            header('Location: /desafio-php/createusuario.php');
+            header('Location: createusuario.php');
             exit;
         }
     }
@@ -46,7 +46,7 @@ if (isset($_POST["editar"])) {
     <?php require('./includes/navbar.php'); 
     //se não tiver logado redireciona para a pagina de login
     if(!isset($_SESSION["email"])){
-        header("Location: /desafio-php/login.php");
+        header("Location: login.php");
     }
     ?>
     

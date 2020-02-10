@@ -1,13 +1,9 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<?php require('./includes/head.php'); ?>
-
-<head>
-    <title>Cadastro</title>
-</head>
-
 <?php
-
+session_start();
+//se já estiver logado redireciona para a pagina de cadastro de dentro do sistema
+if(isset($_SESSION["email"])){
+    header("Location: createusuario.php");
+}
 if (isset($_POST["nome-usuario"])) {
 
     if ($_POST["senha-usuario"] != $_POST["confirm-senha"]) {
@@ -32,7 +28,6 @@ if (isset($_POST["nome-usuario"])) {
             }
         }     
 
-
         if (file_exists('usuarios.json') and !empty($usuario) and ($existenabase == 0)) {
             $dadosatuais = file_get_contents("usuarios.json");
             $temporario = json_decode($dadosatuais, true);
@@ -43,10 +38,15 @@ if (isset($_POST["nome-usuario"])) {
         }
     }
 }
-
-
-
 ?>
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<?php require('./includes/head.php'); ?>
+
+<head>
+    <title>Cadastro</title>
+</head>
 
 <body>
     <?php require('./includes/navbar.php'); ?>

@@ -1,15 +1,11 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<?php require('./includes/head.php'); ?>
-
-<head>
-    <title>Cadastro</title>
-</head>
-
 <?php
-
+session_start();
+//se não tiver logado redireciona para a pagina de login
+if(!isset($_SESSION["email"])){
+    header("Location: login.php");
+}
 if (isset($_POST["nome-usuario"])) {
-
+    //verifica se a senha eh igual a confirmacao da senha
     if ($_POST["senha-usuario"] != $_POST["confirm-senha"]) {
         $senhadif = true;
     } else {
@@ -21,9 +17,10 @@ if (isset($_POST["nome-usuario"])) {
 
         $bancodecadastro = file_get_contents("usuarios.json");
         $bancodecadastro = json_decode($bancodecadastro, true);
+
         $existenabase = 0;
 
-        //verificando se o email inserido já existe no base de cadastros
+        //se o email inserido já existe no base de cadastros (usuarios.json) a var existenabase recebe o valor 1
         if(!empty($bancodecadastro)){
             foreach ($bancodecadastro as $dadocadastrado) {
                 if ($dadocadastrado["email"] == $usuario["email"]) {
@@ -41,9 +38,8 @@ if (isset($_POST["nome-usuario"])) {
         }
     }
 }
-
+//deletando o usuario quando aperta o botao excluir
 if(isset($_POST["excluir"])){
-
     $usuarioscadast = file_get_contents("usuarios.json");
     $usuarioscadast = json_decode($usuarioscadast, true);
     $posicao = array_search($_POST["usuario"], array_column($usuarioscadast, 'email')); 
@@ -55,15 +51,18 @@ if(isset($_POST["excluir"])){
     $jsonData = json_encode($usuariosord);
     file_put_contents("usuarios.json", $jsonData);
 }
-
 ?>
 
+<!DOCTYPE html>
+<html lang="pt-br">
+<?php require('./includes/head.php'); ?>
+
+<head>
+    <title>Cadastro</title>
+</head>
+
 <body>
-    <?php require('./includes/navbar.php'); 
-    //se não tiver logado redireciona para a pagina de login
-    if(!isset($_SESSION["email"])){
-        header("Location: /desafio-php/login.php");
-    }?>
+    <?php require('./includes/navbar.php'); ?>
     <div class="container">
         <div class="row mb-3">
             <div class=" list-group-flush col-md-4 border rounded mt-3">
