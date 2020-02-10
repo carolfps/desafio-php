@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<?php require('./includes/head.php'); ?>
+<head>
+    <title>Excluir Produto</title>
+</head>
+<?php
+    if($_GET["id"] and file_exists('cadastprodutos.json')){
+        $produtoscadast = file_get_contents("cadastprodutos.json");
+        $produtoscadast = json_decode($produtoscadast, true);
+        $posicao = array_search($_GET["id"], array_column($produtoscadast, 'id'));        
+    }
+    if(isset($_POST["excluir"])){
+        $produtoscadast = file_get_contents("cadastprodutos.json");
+        $produtoscadast = json_decode($produtoscadast, true);
+        $posicao = array_search($_GET["id"], array_column($produtoscadast, 'id')); 
+        //deletando foto do produto
+        $fotoproduto = $produtoscadast[$posicao]["Enderecofoto"];
+        unlink($fotoproduto);
+        //deletando dados do produto
+        unset($produtoscadast[$posicao]);
+        //reordenando o array
+        $produtosord=array_values($produtoscadast);
+        $jsonData = json_encode($produtosord);
+        file_put_contents("cadastprodutos.json", $jsonData);
+        header('Location: /desafio-php/indexprodutos.php');
+        exit;
+    }
+?>
+<body>
+    <?php require('./includes/navbar.php'); 
+    //se não tiver logado redireciona para a pagina de login
+    if(!isset($_SESSION["email"])){
+        header("Location: /desafio-php/login.php");
+    }
+    ?>
+    <div class="container">
+    <h3 class="mt-4 font-weight-bold">Excluir Produto</h3>
+        <div class="card" style="width: 100%;">
+        <img src="<?php if($produtoscadast[$posicao]["Enderecofoto"]){echo $produtoscadast[$posicao]["Enderecofoto"];} ?>" class="img-fluid" style="object-fit: cover; object-position: middle;width: 100%; max-height: 300px;" alt="produto">
+            <div class="card-body">
+                <h5 class="card-title"><?php if($produtoscadast[$posicao]["nome"]){echo $produtoscadast[$posicao]["nome"];} ?></h5>
+                <p class="card-text"><?php if($produtoscadast[$posicao]["descricao"]){echo $produtoscadast[$posicao]["descricao"];} ?></p>
+                <p class="card-text">Preço: R$<?php if($produtoscadast[$posicao]["preco"]){echo $produtoscadast[$posicao]["preco"];} ?></p>
+                <form method="post">
+                    <input class="btn btn-danger btn-block" name="excluir" type="submit" value="Excluir">
+                </form>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
