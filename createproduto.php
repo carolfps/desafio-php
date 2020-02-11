@@ -6,10 +6,7 @@ if(!isset($_SESSION["email"])){
 }
 
 if ($_POST) {
-    //se o texto de descricao do produto estiver vazio
-    if (!isset($_POST["descricao-produto"])) {
-        $_POST["descricao-produto"] = "";
-    }
+    
     $produto = array(
         "nome" => $_POST["nome-produto"],
         "preco" => $_POST["preco-produto"],
@@ -20,7 +17,8 @@ if ($_POST) {
 
         $dadosatuais = file_get_contents("cadastprodutos.json");
         $temporario = json_decode($dadosatuais, true);
-        //se esse for o primeiro produto cadastrado no json o id dele será 1, se não será o último id+1
+
+        //se esse for o primeiro produto cadastrado no json o id dele será 1, se não será o (último id) + 1
         if (!isset($temporario[0]["id"])) {
             $produto["id"] = 1;
         } else {
@@ -30,17 +28,24 @@ if ($_POST) {
         }
 
         if ($_FILES) {
+            
+            //renomeando a foto para o padrao Produto1, Produto2, ...
             $ext = strtolower(pathinfo($_FILES["fotoProd"]["name"], PATHINFO_EXTENSION));
             $nome = "Produto".$produto["id"].".".$ext;
             $arquivo = $_FILES["fotoProd"]["tmp_name"];
             $caminho = "uploads\\" . $nome;
+
+            //inserindo a informacao de endereco da foto no json
             $produto["Enderecofoto"] = $caminho;
+
             $uploadOk = 1;
+
             //permitindo apenas determinadas extensões de arquivo
             if ($ext != "jpg" && $ext != "png" && $ext != "jpeg" && $ext != "gif") {
                 $uploadOk = 0;
             }
-            //checa se $uploadOk é zero, ou seja, se teve algum erro
+
+            //se nao for possivel fazer o upload da foto imprime uma msg na tela
             if ($uploadOk == 0) {
                 echo "Desculpa, não foi possível subir o seu arquivo.";                
             } else {
@@ -49,6 +54,7 @@ if ($_POST) {
             }
         }
 
+        //inserindo no json os dados do novo produto cadastrado
         if (file_exists('cadastprodutos.json') ) {
             $dadosatuais = file_get_contents("cadastprodutos.json");
             $temporario = json_decode($dadosatuais, true);
@@ -89,7 +95,7 @@ if ($_POST) {
                 <div class="form-row">
                     <div class="form-group col-md-12">
                         <label for="descricao-produto">Descrição</label>
-                        <textarea class="form-control" id="descricao-produto" rows="8"></textarea>
+                        <textarea class="form-control" id="descricao-produto" rows="8" name="descricao-produto"></textarea>
                     </div>
                 </div>
                 <div class="form-row">
