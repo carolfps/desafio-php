@@ -1,22 +1,28 @@
 <?php
+
 session_start();
+
 //se não tiver logado redireciona para a pagina de login
 if(!isset($_SESSION["email"])){
     header("Location: login.php");
 }
+
+$bancodecadastro = file_get_contents("usuarios.json");
+$bancodecadastro = json_decode($bancodecadastro, true);
+
 if (isset($_POST["nome-usuario"])) {
     //verifica se a senha eh igual a confirmacao da senha
     if ($_POST["senha-usuario"] != $_POST["confirm-senha"]) {
+
         $senhadif = true;
+
     } else {
+
         $usuario = array(
             "nome" => $_POST["nome-usuario"],
             "email" => $_POST["email-usuario"],
             "senha" => password_hash($_POST["senha-usuario"], PASSWORD_DEFAULT)
-        ); 
-
-        $bancodecadastro = file_get_contents("usuarios.json");
-        $bancodecadastro = json_decode($bancodecadastro, true);
+        );         
 
         $existenabase = 0;
 
@@ -29,25 +35,29 @@ if (isset($_POST["nome-usuario"])) {
             }
         }     
 
-        if (file_exists('usuarios.json') and !empty($usuario) and ($existenabase == 0)) {
-            $dadosatuais = file_get_contents("usuarios.json");
-            $temporario = json_decode($dadosatuais, true);
-            $temporario[] = $usuario;
-            $jsonData = json_encode($temporario);
+        if (!empty($usuario) and ($existenabase == 0)) {
+
+            //se o email ainda nao existe na base insere os dados do novo usuario no json
+            $bancodecadastro[] = $usuario;
+            $jsonData = json_encode($bancodecadastro);
             file_put_contents("usuarios.json", $jsonData);
+
         }
     }
 }
+
 //deletando o usuario quando aperta o botao excluir
 if(isset($_POST["excluir"])){
-    $usuarioscadast = file_get_contents("usuarios.json");
-    $usuarioscadast = json_decode($usuarioscadast, true);
-    $posicao = array_search($_POST["usuario"], array_column($usuarioscadast, 'email')); 
+
+    //descobrindo a posicao do array com as info do usuario que sera excluido
+    $posicao = array_search($_POST["usuario"], array_column($bancodecadastro, 'email')); 
     
     //deletando dados do usuario
-    unset($usuarioscadast[$posicao]);
+    unset($bancodecadastro[$posicao]);
+
     //reordenando o array
-    $usuariosord = array_values($usuarioscadast);
+    $usuariosord = array_values($bancodecadastro);
+
     $jsonData = json_encode($usuariosord);
     file_put_contents("usuarios.json", $jsonData);
 }
@@ -81,8 +91,8 @@ if(isset($_POST["excluir"])){
                         </div>
                         <div class="d-flex align-items-end flex-column">
                             <form action="editusuario.php" method="post">
-                                <input type="hidden" name="edit-usuario" value="<?php echo $usuario["email"];?>">
-                                <input type="submit" value="Editar" class="btn btn-info my-1" style="width: 80px;">
+                                <input type="hidden" name="email-usuario" value="<?php echo $usuario["email"];?>">
+                                <input type="submit" name="edit-usuario" value="Editar" class="btn btn-info my-1" style="width: 80px;">
                             </form>
                             <form method="post">
                                 <input type="hidden" name="usuario" value="<?php echo $usuario["email"];?>">
