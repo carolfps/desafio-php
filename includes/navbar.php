@@ -19,7 +19,7 @@
                 </li>
             </ul>
             <div class="navbar-nav">
-                <form method="post">
+                <form action="logout.php" method="post">
                     <input class="btn btn-dark" type="submit" name="encerrar" value="Logout">
                 </form>
             </div> 
@@ -28,9 +28,3 @@
         <?php }?>
     </div>
 </nav>
-<?php 
-if(isset($_POST["encerrar"])){
-    session_unset();
-    session_destroy();
-    header("Location: /desafio-php/login.php");
-}?>
