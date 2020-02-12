@@ -38,8 +38,6 @@ if ($_POST) {
         $nome = "Produto".$produto["id"].".".$ext;
         $arquivo = $_FILES["fotoProd"]["tmp_name"];
         $caminho = "uploads\\" . $nome;
-
-        //inserindo a informacao de endereco da foto no json
         $produto["Enderecofoto"] = $caminho;
 
         $uploadOk = 1;
