@@ -20,7 +20,7 @@ $posicao = array_search($_SESSION["email-edit"], array_column($usuarioscadast, '
 
 if (isset($_POST["editar"])) {
 
-    
+    //verificando senha
     if ($_POST["senha"] != $_POST["confirm-senha"]) {
 
         $senhadif = true;
@@ -43,7 +43,22 @@ if (isset($_POST["editar"])) {
 
         }
         
-        if (file_exists('usuarios.json')) {
+        
+        //se o email inserido já existe no base de cadastros (usuarios.json) a variavel existenabase recebe o valor 1
+        $existenabase = 0;
+
+        for($indice=0; $indice<count($usuarioscadast); $indice++){
+            
+            //verifica se o email editado pelo usuario existe em alguma posicao que nao seja a dele proprio
+            if(($indice != $posicao) and ($usuarioscadast[$indice]["email"] == $usuarioedit["email"])){
+                
+                $existenabase = 1;  
+                
+            }
+        }   
+
+        //se o email inserido pelo usuario ainda nao existe na base de cadastros, salva as alteracoes no json
+        if ($existenabase == 0) {
             
             //substituindo dados do usuario pelos dados editados
             $usuarioscadast[$posicao] = $usuarioedit;
@@ -100,6 +115,7 @@ if (isset($_POST["editar"])) {
                         <label for="confirm-senha">Confirmar senha</label>
                         <input type="password" class="form-control" id="confirm-senha" name="confirm-senha" minlength="6">
                         <?php if (isset($senhadif) and $senhadif == 1) { ?><small class="form-text text-danger">Senha não confere!</small><?php } ?>
+                        <?php if (isset($existenabase) and $existenabase == 1) { ?><small class="form-text text-danger">Este email já tem cadastro!</small><?php } ?>
                     </div>
                 </div>
             </div>
