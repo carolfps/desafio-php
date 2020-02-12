@@ -27,17 +27,15 @@ if (isset($_POST["nome-usuario"])) {
         $existenabase = 0;
 
         //se o email inserido já existe no base de cadastros (usuarios.json) a var existenabase recebe o valor 1
-        if(!empty($bancodecadastro)){
-            foreach ($bancodecadastro as $dadocadastrado) {
-                if ($dadocadastrado["email"] == $usuario["email"]) {
-                    $existenabase = 1;
-                }
+        foreach ($bancodecadastro as $dadocadastrado) {
+            if ($dadocadastrado["email"] == $usuario["email"]) {
+                $existenabase = 1;
             }
-        }     
+        }
+         
+        //se o email ainda nao existe na base insere os dados do novo usuario no json
+        if ($existenabase == 0) {
 
-        if (!empty($usuario) and ($existenabase == 0)) {
-
-            //se o email ainda nao existe na base insere os dados do novo usuario no json
             $bancodecadastro[] = $usuario;
             $jsonData = json_encode($bancodecadastro);
             file_put_contents("usuarios.json", $jsonData);
