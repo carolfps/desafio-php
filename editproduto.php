@@ -8,7 +8,7 @@ if(!isset($_SESSION["email"])){
 }
 
 //verifica se o id foi passado por get e existe o json com os dados dos produtos
-if ($_GET["id"] and file_exists('cadastprodutos.json')) {
+if ($_GET["id"]) {
 
     $dadosatuais = file_get_contents("cadastprodutos.json");
     $dadosatuais = json_decode($dadosatuais, true);
@@ -25,29 +25,32 @@ if ($_POST) {
         "descricao" => $_POST["descricao"],
         "id" => $_GET["id"],
         "Enderecofoto" => $dadosatuais[$posicao]["Enderecofoto"]
-    );
+    );    
 
-    if (file_exists('cadastprodutos.json')) {
+    //se uma nova foto for inserida
+    if ($_FILES["fotoProd"]["error"]==0) {
 
-        //se uma nova foto for inserida
-        if ($_FILES["fotoProd"]["error"]==0) {
+        //renomeando o arquivo e salvando ele na pasta uploads
+        $ext = strtolower(pathinfo($_FILES["fotoProd"]["name"], PATHINFO_EXTENSION));
+        $nome = "Produto".$produtoEdit["id"].".".$ext;
+        $arquivo = $_FILES["fotoProd"]["tmp_name"];
+        $caminho = "uploads\\" . $nome;
+        $produtoEdit["Enderecofoto"] = $caminho;
 
-            //renomeando o arquivo e salvando ele na pasta uploads
-            $ext = strtolower(pathinfo($_FILES["fotoProd"]["name"], PATHINFO_EXTENSION));
-            $nome = "Produto".$produtoEdit["id"].".".$ext;
-            $arquivo = $_FILES["fotoProd"]["tmp_name"];
-            $caminho = "uploads\\" . $nome;
-            $produtoEdit["Enderecofoto"] = $caminho;
-            
-            //permite apenas determinadas extensões de arquivo
-            if ($ext != "jpg" && $ext != "png" && $ext != "jpeg" && $ext != "gif") {
-                echo "Desculpa, não foi possível subir o seu arquivo."; 
-            } else {
-                //se o arquivo tiver a extensão desejada
-                $movendo = move_uploaded_file($arquivo, $caminho);
-            }
-        }
+        $uploadOk = 1;
         
+        //permite apenas determinadas extensões de arquivo
+        if ($ext != "jpg" && $ext != "png" && $ext != "jpeg" && $ext != "gif") {
+            $uploadOk = 0; 
+        } else {
+            //se o arquivo tiver a extensão desejada
+            $movendo = move_uploaded_file($arquivo, $caminho);
+        }
+    }
+    
+    //se o upload da foto der certo, insere no json os dados do novo produto cadastrado
+    if ($uploadOk == 1) {
+
         //atualizando os dados do produto
         $dadosatuais[$posicao] = $produtoEdit;
 
@@ -58,8 +61,9 @@ if ($_POST) {
         //após enviar os dados para o json redireciona para a página index
         header('Location: indexprodutos.php');
         exit;
-        
-    }
+
+    }      
+    
 }
 ?>
 
@@ -99,8 +103,9 @@ if ($_POST) {
                 <div class="form-row">
                     <div class="form-group col-md-12">
                         <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="fotoProd" name="fotoProd" >
-                        <label class="custom-file-label" for="fotoProd" data-browse="Buscar">Selecione a foto</label>
+                            <input type="file" class="custom-file-input" id="fotoProd" name="fotoProd" >
+                            <label class="custom-file-label" for="fotoProd" data-browse="Buscar">Selecione a foto</label>
+                            <?php if (isset($uploadOk) and $uploadOk == 0) { ?><small class="form-text text-danger">Desculpa, não foi possível subir o seu arquivo. Formatos aceitos: JPG, JPEG, PNG, GIF.</small><?php } ?>
                         </div>
                     </div>
                 </div>
