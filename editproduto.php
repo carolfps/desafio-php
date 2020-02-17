@@ -26,19 +26,20 @@ if ($_POST) {
         "id" => $_GET["id"],
         "Enderecofoto" => $dadosatuais[$posicao]["Enderecofoto"]
     );    
-
+    
+    
     //se uma nova foto for inserida
     if ($_FILES["fotoProd"]["error"]==0) {
-
+        
         //renomeando o arquivo e salvando ele na pasta uploads
         $ext = strtolower(pathinfo($_FILES["fotoProd"]["name"], PATHINFO_EXTENSION));
         $nome = "Produto".$produtoEdit["id"].".".$ext;
         $arquivo = $_FILES["fotoProd"]["tmp_name"];
         $caminho = "uploads\\" . $nome;
         $produtoEdit["Enderecofoto"] = $caminho;
-
-        $uploadOk = 1;
         
+        $uploadOk = 1;
+
         //permite apenas determinadas extensões de arquivo
         if ($ext != "jpg" && $ext != "png" && $ext != "jpeg" && $ext != "gif") {
             $uploadOk = 0; 
@@ -48,8 +49,8 @@ if ($_POST) {
         }
     }
     
-    //se o upload da foto der certo, insere no json os dados do novo produto cadastrado
-    if ($uploadOk == 1) {
+    //se o upload da foto nao der erro ou se nao for inserida uma nova foto, insere no json os dados do novo produto cadastrado
+    if ( ( ($uploadOk ?? 0) == 1 ) or $_FILES["fotoProd"]["size"]==0) {
 
         //atualizando os dados do produto
         $dadosatuais[$posicao] = $produtoEdit;
