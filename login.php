@@ -53,9 +53,14 @@ if (isset($_SESSION["senhaok"])) {
 
 <head>
     <title>Login</title>
+    <style>
+    body{
+        background: #E6E8C5; 
+    }
+    </style>
 </head>
 
-<body class="bg-light">
+<body >
     <?php require('./includes/navbar.php');?> 
     <main>
         <div class="d-flex justify-content-center">

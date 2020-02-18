@@ -35,12 +35,17 @@
 <?php require('./includes/head.php'); ?>
 <head>
     <title>Excluir Produto</title>
+    <style>
+    body{
+        background: #F5FFE6; 
+    }
+    </style>
 </head>
 <body>
     <?php require('./includes/navbar.php'); ?>
     <div class="container">
     <h3 class="mt-4 font-weight-bold">Excluir Produto</h3>
-        <div class="card" style="width: 100%;">
+        <div class="card mb-3" style="width: 100%;">
         <img src="<?php if($produtoscadast[$posicao]["Enderecofoto"]){echo $produtoscadast[$posicao]["Enderecofoto"];} ?>" class="img-fluid" style="object-fit: cover; object-position: middle;width: 100%; max-height: 300px;" alt="produto">
             <div class="card-body">
                 <h5 class="card-title"><?php if($produtoscadast[$posicao]["nome"]){echo $produtoscadast[$posicao]["nome"];} ?></h5>

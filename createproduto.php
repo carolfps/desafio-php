@@ -73,6 +73,11 @@ if ($_POST) {
 
 <head>
     <title>Adicionar Produto</title>
+    <style>
+    body{
+        background: #F5FFE6; 
+    }
+    </style>
 </head>
 
 <body>

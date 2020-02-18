@@ -67,13 +67,18 @@ if(isset($_POST["excluir"])){
 
 <head>
     <title>Cadastro</title>
+    <style>
+    body{
+        background: #F5FFE6; 
+    }
+    </style>
 </head>
 
 <body>
     <?php require('./includes/navbar.php'); ?>
     <div class="container">
         <div class="row mb-3">
-            <div class=" list-group-flush col-md-4 border rounded mt-3">
+            <div class=" list-group-flush col-md-4 border rounded mt-3 bg-white">
                 <h3 class="my-1 font-weight-bold">Usuários</h3>
                 <?php
                 if (filesize('usuarios.json')>2) {

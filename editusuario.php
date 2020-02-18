@@ -81,6 +81,11 @@ if (isset($_POST["editar"])) {
 
 <head>
     <title>Editar Usuário</title>
+    <style>
+    body{
+        background: #F5FFE6; 
+    }
+    </style>
 </head>
 
 <body>
