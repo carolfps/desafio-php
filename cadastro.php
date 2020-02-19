@@ -48,7 +48,7 @@ if (isset($_POST["nome-usuario"])) {
     <title>Cadastro</title>
     <style>
     body{
-        background: #F5FFE6; 
+        background: #FEFFF2; 
     }
     </style>
 </head>

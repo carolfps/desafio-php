@@ -14,7 +14,7 @@ if(!$_SESSION["email"]){
     <title>Lista de Produtos</title>
     <style>
     body{
-        background: #F5FFE6; 
+        background: #FEFFF2; 
     }
     table{
         background: #FFFFFF; 
