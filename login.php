@@ -87,7 +87,7 @@ if (isset($_SESSION["senhaok"])) {
     <?php require('./includes/navbar.php'); ?>
     <main>
         <div class="flex-container">
-            <div class="d-flex col-sm-6 pl-0 bg-light my-4">
+            <div class="d-flex col-sm-6 pl-0 bg-light my-4 shadow">
 
                 <div class="col-sm-6 pl-0">
                     <img src="img/fundo.jpg" alt="Pastas coloridas">
@@ -113,9 +113,9 @@ if (isset($_SESSION["senhaok"])) {
                         <?php }
                         } ?>
     
-                        <input class="btn btn-primary mt-4 btn-block" type="submit" value="Entrar" name="entrar">
+                        <input class="btn btn-dark mt-4 btn-block" type="submit" value="Entrar" name="entrar">
                     </form>
-                    <small>Não tem cadastro? <a href="cadastro.php" style="display: inline-block;">Clique aqui e registre-se.</a></small>
+                    <small>Não tem cadastro? <a href="cadastro.php" class="text-info" style="display: inline-block;">Clique aqui e registre-se.</a></small>
                 </div>
                 
             </div>
